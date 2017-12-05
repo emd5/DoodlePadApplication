@@ -5,41 +5,66 @@ package adapters;/*
  */
 
 import drawing.IShape;
+
+
 import drawing.SavedShapes;
 import javafx.scene.canvas.GraphicsContext;
+
 import javafx.scene.paint.Color;
 import shapes.Circle;
+import shapes.Shape;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ *
+ * Your program will make direct use of the SavedShapes class to store shapes that
+ are added to the user interface. Our goal is to use the existing shape classes seen
+ above, but to make them compatible with our SavedShapes class.
+
+ Instead create an adapter class for each of the four classes: Oval, Rectangle,
+ Line and Triangle.
+
+ Your adapter class will store an instance of one of the shape classes and
+ implement the IShape interface.
+
+ This directly follows our use of the Adapter pattern in class.
+
+
+ * This adapter class will store an instance of one Circle class
+ * and implement the IShape interface
  * @author Liz Mahoney
  * @version 1.0
  */
+
 public class CircleAdapter implements IShape{
 
-
     private Circle circle;
+    private double thickness;
+    private boolean fill;
+    private Color color;
 
-    public CircleAdapter(GraphicsContext drawCircle){
-
-        circle = new Circle(circle.getRadius(), circle.getX(), circle.getY(),
-            circle.getThickness(), circle.getColor(),circle.isFill());
-
-        drawShape(drawCircle);
+    public CircleAdapter(Circle circle){
+        this.circle = circle;
     }
 
     @Override
     public IShape setThickness(final double value){
-        return setThickness(value);
+        this.thickness = value;
+        return this;
     }
 
     @Override
     public IShape setColor(final Color value){
-       return setColor(value);
+       this.color = value;
+       return this;
     }
 
     @Override
     public IShape setFilled(final boolean value){
-        return setFilled(value);
+        this.fill = value;
+        return this;
     }
 
     @Override
@@ -70,9 +95,13 @@ public class CircleAdapter implements IShape{
     @Override
     public void drawShape(final GraphicsContext graphics){
 
-        SavedShapes savedShapes = new SavedShapes();
 
-        savedShapes.add(new CircleAdapter(graphics));
+        graphics.fillOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
+
+        graphics.setFill(getColor());
+
+        graphics.strokeOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
+
 
     }
 }

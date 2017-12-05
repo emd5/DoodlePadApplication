@@ -17,31 +17,31 @@ import shapes.Shape;
  */
 public class RectangleAdapter implements IShape{
 
-
     private Rectangle rectangle;
+    private double thickness;
+    private Color color;
+    private boolean fill;
 
-
-    public RectangleAdapter(GraphicsContext graphicsContext){
-       rectangle= new Rectangle(rectangle.getX(), rectangle.getY(),
-              rectangle.getWidth(), rectangle.getHeight(),
-               rectangle.getThickness(),rectangle.getColor(),
-              rectangle.isFill() );
-        drawShape(graphicsContext);
+    public RectangleAdapter(Rectangle rectangle){
+        this.rectangle = rectangle;
     }
 
     @Override
     public IShape setThickness(final double value){
-        return setThickness(value);
+        this.thickness = value;
+        return this;
     }
 
     @Override
     public IShape setColor(final Color value){
-        return setColor(value);
+        this.color = value;
+        return this;
     }
 
     @Override
     public IShape setFilled(final boolean value){
-        return setFilled(value);
+        this.fill = value;
+        return this;
     }
 
     @Override
@@ -71,8 +71,9 @@ public class RectangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        SavedShapes savedShapes = new SavedShapes();
-        savedShapes.add(new RectangleAdapter(graphics));
+        graphics.fillRect(getX(),getY(),this.rectangle.getWidth(),
+                this.rectangle.getHeight());
+
 
     }
 }

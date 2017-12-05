@@ -17,31 +17,35 @@ import shapes.Shape;
  */
 public class LineAdapter implements IShape{
 
-    Line line;
+    private Line line;
+    private double thickness;
+    private Color color;
+    private boolean fill;
 
+    public LineAdapter(Line line){
+        this.line = line;
 
-    public LineAdapter(GraphicsContext graphicsContext){
-        line = new Line(line.getX(), line.getY(), line.getX2(),
-                line.getY2(), line.getThickness(), line.getColor(),
-                line.isFill());
-
-        drawShape(graphicsContext);
     }
 
     @Override
     public IShape setThickness(final double value){
 
-        return setThickness(value);
+        this.thickness = value;
+        return this;
     }
 
     @Override
     public IShape setColor(final Color value){
-        return setColor(value);
+
+        this.color = value;
+        return this;
     }
 
     @Override
     public IShape setFilled(final boolean value){
-        return setFilled(value);
+
+        this.fill = value;
+        return this;
     }
 
     @Override
@@ -70,7 +74,9 @@ public class LineAdapter implements IShape{
     }
     @Override
     public void drawShape(final GraphicsContext graphics){
-        SavedShapes savedShapes = new SavedShapes();
-        savedShapes.add(new LineAdapter(graphics));
+        graphics.setStroke(getColor());
+        graphics.setLineWidth(getThickness());
+        graphics.strokeLine(getX(),getY(),this.line.getX2(), this.line.getY2());
+
     }
 }

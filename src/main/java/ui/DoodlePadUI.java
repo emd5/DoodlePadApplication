@@ -10,6 +10,9 @@ package ui;
  * @version 1.0
  */
 
+
+import adapters.CircleAdapter;
+import drawing.IShape;
 import drawing.SavedShapes;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -27,8 +30,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import shapes.Circle;
 import shapes.Shape;
 
 
@@ -43,9 +46,8 @@ public class DoodlePadUI extends Application{
     private static final int CANVAS_WIDTH = 750;
     private static final int CANVAS_HEIGHT = 400;
 
-    private static final String[] FILE_NAME ={"images/oval.png", "images/rectangle" +
-            ".png",
-            "images/triangle.png", "images/line.png", "images/polygon.png"};
+    private static final String[] SHAPE_FILE_NAME ={"oval", "rectangle",
+            "triangle", "line", "polygon"};
     private static final int IMAGE_WIDTH = 30;
     private static final int IMAGE_HEIGHT = 30;
     private static final int MAX_THICKNESS = 10;
@@ -56,10 +58,18 @@ public class DoodlePadUI extends Application{
     private static double thickness;
     private static ColorPicker colorPicker;
     private static CheckBox fillCheckBox;
+    private static ToggleButton[] toggleButtons;
+    private static GraphicsContext graphicsContext;
+    private static ToggleGroup toggleGroup;
+    private static Slider slider;
+    private static double x;
+    private static double y;
 
 
-    public static SavedShapes savedShapes = new SavedShapes();
+    public static SavedShapes savedShapes;
+
     public static Control control;
+    public static Shape shape;
 
     @Override
     public void start(Stage stage){
@@ -79,36 +89,59 @@ public class DoodlePadUI extends Application{
         final VBox canvasVbox = new VBox();
 
         Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
             @Override
             public void handle(final MouseEvent event){
-                GraphicsContext graphicsContext
-                        = canvas.getGraphicsContext2D();
+
+                 x = event.getX();
+                 y = event.getY();
+
+                selectedToggleShape();
+
+                graphicsContext = canvas.getGraphicsContext2D();
 
 
+
+                IShape circle = new CircleAdapter(new Circle(20,x,y,thickness, colorPicker
+                        .getValue(),fillCheckBox.isSelected()));
+                System.out.println(circle.toString());
+                savedShapes.add(circle);
                 savedShapes.drawShapes(graphicsContext);
 
-                double x = event.getX();
-                double y = event.getY();
 
-//                Shape shape = new Shape(x,y, thickness, colorPicker.getValue
-//                        (), fillCheckBox);
+
+
 
             }
         });
-
         canvasVbox.setId("canvasVbox");
-        canvas.setId("canvas");
-
         canvasVbox.getChildren().addAll(canvas);
-
         window.getChildren().addAll(flowPane, canvasVbox);
-
         window.getStylesheets().addAll("css/doodlepad.css");
 
         return new Scene(window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    }
+
+    private void selectedToggleShape(){
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            @Override
+            public void changed(final ObservableValue<? extends Toggle> observable,
+                                final Toggle oldValue, final Toggle newValue){
+                switch(newValue.getUserData().toString()){
+                    case "oval":
+                        IShape circle = new CircleAdapter(new Circle(20,x,y,thickness,
+                                colorPicker.getValue(),fillCheckBox.isSelected()));
+                        savedShapes.add(circle);
+
+
+                }
+
+
+
+            }
+        });
     }
 
     private FlowPane toolBarSettings(){
@@ -119,11 +152,8 @@ public class DoodlePadUI extends Application{
 
         ToggleButton[] buttonShapes = shapeToggleButtons();
 
-        for(int i = 0; i< FILE_NAME.length; i++){
+        for(int i = 0; i< SHAPE_FILE_NAME.length; i++){
             final ToggleButton button = buttonShapes[i];
-
-            button.setPrefSize(LAYOUT_SPACING,LAYOUT_SPACING);
-
             flowPane.getChildren().add(button);
         }
 
@@ -140,44 +170,9 @@ public class DoodlePadUI extends Application{
 
         return flowPane;
     }
-//    private FlowPane toolBarSettings(){
-//
-//        final FlowPane flowPane = new FlowPane();
-//        flowPane.setId("flowPane");
-//        flowPane.setHgap(TOOLBAR_HORIZONTAL_SPACING);
-//
-//        ToggleButton[] buttonShapes = shapeToggleButtons();
-//
-//        for(int i = 0; i< FILE_NAME.length; i++){
-//            final ToggleButton button = buttonShapes[i];
-//
-//            button.setPrefSize(LAYOUT_SPACING,LAYOUT_SPACING);
-//
-//            flowPane.getChildren().add(button);
-//        }
-//
-//        final ColorPicker colorSelector = colorButtonSelector();
-//
-//        final CheckBox colorFill = filledCheckBox();
-//
-//        final Label thicknessLabel= new Label("Thickness");
-//
-//        final TextField thicknessTextField = new TextField();
-//        thicknessTextField.setPrefWidth(TEXTFIELD_WIDTH);
-//        final Slider sliderThickSetting = sliderThickSetting(thicknessTextField);
-//
-//        double thickValue = sliderThickSetting.getValue();
-//
-//       // Shape shape = new Shape(thickValue, c);
-//
-//       flowPane.getChildren().addAll(colorSelector, colorFill, thicknessLabel,
-//                thicknessTextField, sliderThickSetting);
-//
-//        return flowPane;
-//    }
 
     private Slider sliderThickSetting(TextField thicknessTextField){
-        final Slider slider = new Slider(0, MAX_THICKNESS, INITIAL_SLIDER_VALUE);
+        slider = new Slider(0, MAX_THICKNESS, INITIAL_SLIDER_VALUE);
         slider.setId("slider");
 
         slider.valueProperty().addListener(new ChangeListener<Number>(){
@@ -186,8 +181,13 @@ public class DoodlePadUI extends Application{
                 observable, final Number oldValue, final Number newValue){
                 thicknessTextField.setText(String.valueOf
                         (Math.round(newValue.intValue())));
+
             }
+
         });
+
+        System.out.println("slider" + slider.getValue());
+
 
         return slider;
 
@@ -195,52 +195,42 @@ public class DoodlePadUI extends Application{
 
     private ToggleButton[] shapeToggleButtons(){
 
-        final ToggleGroup shapeToggleGroup = new ToggleGroup();
+        final ToggleButton[] toggleButtons = new ToggleButton[SHAPE_FILE_NAME.length];
+        toggleGroup = new ToggleGroup();
 
-        final ToggleButton[] toggleButtons = new ToggleButton[FILE_NAME.length];
+        for(int i = 0; i< SHAPE_FILE_NAME.length; i++){
 
-        for(int i = 0; i< FILE_NAME.length; i++){
-
-            final ToggleButton toggleButton = toggleButtons[i];
-
-            Image[] image = new Image[FILE_NAME.length];
-            image[i] = new Image(String.valueOf(new File(FILE_NAME[i])),
+            Image[] image = new Image[SHAPE_FILE_NAME.length];
+            image[i] = new Image(String.valueOf(new File("images/"+ SHAPE_FILE_NAME[i]+".png")),
                     IMAGE_WIDTH, IMAGE_HEIGHT,false,true);
 
             toggleButtons[i] = new ToggleButton("", new ImageView(image[i]));
-            toggleButtons[i].setToggleGroup(shapeToggleGroup);
-
-            toggleButtons[i].setOnAction(new EventHandler<ActionEvent>(){
-                @Override
-                //oval = 0 ,rectangle = 1,triangle =2 , line = 3, polygon =4
-                public void handle(final ActionEvent event){
-                    //oval = 0 ,rectangle = 1,triangle =2 , line = 3, polygon =4
-                    if(toggleButton.isSelected()){
-
-
-
-                    }
-                }
-            });
-
+            toggleButtons[i].setUserData(SHAPE_FILE_NAME[i]);
+            toggleButtons[i].setPrefSize(LAYOUT_SPACING, LAYOUT_SPACING);
+            toggleButtons[i].setToggleGroup(toggleGroup);
         }
+
+        selectedToggleShape();
+
         return toggleButtons;
     }
 
     private ColorPicker colorButtonSelector(){
 
-        colorPicker = new ColorPicker();
+        ColorPicker colorPicker = new ColorPicker();
         colorPicker.getStyleClass().add("split-button");
         colorPicker.setId("colorpicker-button");
 
         colorPicker.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(final ActionEvent event){
+                System.out.println(colorPicker.getValue());
                 colorPicker.getValue();
-
-                //do something
             }
         });
+
+        colorPicker.getValue();
+        System.out.println("2 " +colorPicker.getValue());
 
         return colorPicker;
     }
@@ -252,12 +242,14 @@ public class DoodlePadUI extends Application{
         fillCheckBox.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(final ActionEvent event){
-
-                fillCheckBox.isSelected();
+                if(!filledCheckBox().isIndeterminate()){
+                    fillCheckBox.isSelected();
+                }
+                else{
+                    fillCheckBox.isIndeterminate();
+                }
             }
         });
         return fillCheckBox;
-
     }
-
 }

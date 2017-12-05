@@ -9,6 +9,7 @@ import drawing.SavedShapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import shapes.Shape;
+import shapes.Triangle;
 
 
 /**
@@ -17,29 +18,32 @@ import shapes.Shape;
  */
 public class TriangleAdapter implements IShape{
 
-    private Shape triangle;
+    private Triangle triangle;
+    private double thickness;
+    private Color color;
+    private boolean fill;
 
-    public TriangleAdapter(GraphicsContext graphicsContext){
+    public TriangleAdapter(Triangle triangle){
+        this.triangle = triangle;
 
-        triangle = new Shape(triangle.getX(), triangle.getY(),
-            triangle.getThickness(), triangle.getColor(), triangle.isFill());
-
-        drawShape(graphicsContext);
     }
 
     @Override
     public IShape setThickness(final double value){
-        return setThickness(value);
+        this.thickness= value;
+        return this;
     }
 
     @Override
     public IShape setColor(final Color value){
-        return setColor(value);
+        this.color = value;
+        return this;
     }
 
     @Override
     public IShape setFilled(final boolean value){
-        return setFilled(value);
+        this.fill = value;
+        return this;
     }
 
     @Override
@@ -69,7 +73,15 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        SavedShapes savedShapes = new SavedShapes();
-        savedShapes.add(new TriangleAdapter(graphics));
+        double xpoints[] = {25, 145, 25, 145, 25};
+        double ypoints[] = {25, 25, 145, 145, 25};
+        int npoints = 5;
+
+        //draws the triangle
+        graphics.strokePolygon(xpoints,ypoints,npoints);
+        graphics.setFill(getColor());
+
+
+
     }
 }
