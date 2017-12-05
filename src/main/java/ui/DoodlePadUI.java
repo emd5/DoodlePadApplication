@@ -12,6 +12,10 @@ package ui;
 
 
 import adapters.CircleAdapter;
+import adapters.LineAdapter;
+import adapters.RectangleAdapter;
+import adapters.TriangleAdapter;
+import controller.Control;
 import drawing.IShape;
 import drawing.SavedShapes;
 import javafx.application.Application;
@@ -31,11 +35,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import javafx.stage.Stage;
-import shapes.Circle;
-import shapes.Shape;
+import shapes.*;
 
 
 import java.io.File;
+import java.util.Random;
 
 
 public class DoodlePadUI extends Application{
@@ -55,18 +59,18 @@ public class DoodlePadUI extends Application{
     private static final int TEXTFIELD_WIDTH = 40;
     private static final int TOOLBAR_HORIZONTAL_SPACING = 5;
     private static final int CHECKBOX_PADDING_RIGHT = 40;
-    private static double thickness;
+
     private static ColorPicker colorPicker;
     private static CheckBox fillCheckBox;
-    private static ToggleButton[] toggleButtons;
     private static GraphicsContext graphicsContext;
     private static ToggleGroup toggleGroup;
     private static Slider slider;
     private static double x;
     private static double y;
+    private static IShape iShape;
+    private static double thickness;
 
-
-    public static SavedShapes savedShapes;
+    public static SavedShapes savedShapes = new SavedShapes();
 
     public static Control control;
     public static Shape shape;
@@ -79,6 +83,9 @@ public class DoodlePadUI extends Application{
     }
 
     private Scene getScene(){
+        Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+       // savedShapes.drawShapes(graphicsContext);
 
         final VBox window = new VBox(LAYOUT_SPACING);
         window.setId("window");
@@ -88,33 +95,53 @@ public class DoodlePadUI extends Application{
 
         final VBox canvasVbox = new VBox();
 
-        Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
             @Override
             public void handle(final MouseEvent event){
+                Random random = new Random();
 
                  x = event.getX();
                  y = event.getY();
 
-                selectedToggleShape();
+                 String shapeButton = toggleGroup.getSelectedToggle().getUserData().toString();
+                 switch(shapeButton){
+                     case "oval":
+                         IShape circle = new CircleAdapter(new Circle
+                                 (random.nextInt(100), x , y, slider.getValue() ,colorPicker
+                                         .getValue(),fillCheckBox.isSelected() ));
+                         savedShapes.add(circle);
+                         savedShapes.drawShapes(canvas.getGraphicsContext2D());
+                         break;
 
-                graphicsContext = canvas.getGraphicsContext2D();
+                     case "triangle":
+                         IShape triangle = new TriangleAdapter(new Triangle(x, y, random.nextInt(10),
+                                 random.nextInt(10), slider.getValue() , colorPicker.getValue(),
+                                 fillCheckBox.isSelected() ));
+                         savedShapes.add(triangle);
+                         savedShapes.drawShapes(canvas.getGraphicsContext2D());
+                         break;
 
+                     case "line":
+                         IShape line = new LineAdapter(new Line(x , y, x+random.nextInt(50), y+random.nextInt(50),
+                                 slider.getValue() , colorPicker.getValue(), fillCheckBox.isSelected() ));
+                         savedShapes.add(line);
+                         savedShapes.drawShapes(canvas.getGraphicsContext2D());
+                         break;
 
+                     case "rectangle":
+                         IShape rectangle = new RectangleAdapter(new Rectangle(x , y, x+random.nextInt(100),
+                           y+random.nextInt(100),slider.getValue() ,colorPicker.getValue(),fillCheckBox.isSelected() ));
+                         savedShapes.add(rectangle);
+                         break;
 
-                IShape circle = new CircleAdapter(new Circle(20,x,y,thickness, colorPicker
-                        .getValue(),fillCheckBox.isSelected()));
-                System.out.println(circle.toString());
-                savedShapes.add(circle);
-                savedShapes.drawShapes(graphicsContext);
+                     case "polygon":
+                         savedShapes.drawShapes(canvas.getGraphicsContext2D());
 
-
-
-
-
+                 }
             }
         });
+
         canvasVbox.setId("canvasVbox");
         canvasVbox.getChildren().addAll(canvas);
         window.getChildren().addAll(flowPane, canvasVbox);
@@ -126,22 +153,32 @@ public class DoodlePadUI extends Application{
     private void selectedToggleShape(){
 
         toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+
             @Override
             public void changed(final ObservableValue<? extends Toggle> observable,
                                 final Toggle oldValue, final Toggle newValue){
                 switch(newValue.getUserData().toString()){
                     case "oval":
-                        IShape circle = new CircleAdapter(new Circle(20,x,y,thickness,
-                                colorPicker.getValue(),fillCheckBox.isSelected()));
-                        savedShapes.add(circle);
-
-
+                        System.out.println("Circle pressed");
+                        break;
+                    case"rectangle":
+                        System.out.println("Rectangle pressed");
+                        break;
+                    case"triangle":
+                        System.out.println("Triangle pressed");
+                        break;
+                    case"line":
+                        System.out.println("line pressed");
+                        break;
+                    case"polygon":
+                        System.out.println("polygon pressed");
+                        break;
+                    default:
+                      System.out.println("default " +newValue.getUserData().toString());
                 }
-
-
-
             }
         });
+
     }
 
     private FlowPane toolBarSettings(){
@@ -160,37 +197,38 @@ public class DoodlePadUI extends Application{
         final TextField thicknessTextField = new TextField();
         thicknessTextField.setPrefWidth(TEXTFIELD_WIDTH);
 
+
         final Slider sliderThickSetting = sliderThickSetting(thicknessTextField);
 
         thickness = sliderThickSetting.getValue();
 
-        flowPane.getChildren().addAll(colorButtonSelector(), filledCheckBox(),
-                new Label("Thickness"),
-                thicknessTextField, sliderThickSetting);
+        final CheckBox fillCheckbox = fillColorCheckbox();
+
+
+
+        flowPane.getChildren().addAll(colorButtonSelector(), fillColorCheckbox(),
+                new Label("Thickness"), thicknessTextField, sliderThickSetting);
 
         return flowPane;
     }
 
     private Slider sliderThickSetting(TextField thicknessTextField){
-        slider = new Slider(0, MAX_THICKNESS, INITIAL_SLIDER_VALUE);
+        slider = new Slider(1, MAX_THICKNESS, INITIAL_SLIDER_VALUE);
         slider.setId("slider");
 
         slider.valueProperty().addListener(new ChangeListener<Number>(){
             @Override
             public void changed(final ObservableValue<? extends Number>
                 observable, final Number oldValue, final Number newValue){
+                slider.getValue();
                 thicknessTextField.setText(String.valueOf
                         (Math.round(newValue.intValue())));
-
+                System.out.println(slider.getValue());
             }
 
         });
 
-        System.out.println("slider" + slider.getValue());
-
-
         return slider;
-
     }
 
     private ToggleButton[] shapeToggleButtons(){
@@ -211,45 +249,31 @@ public class DoodlePadUI extends Application{
         }
 
         selectedToggleShape();
-
         return toggleButtons;
     }
 
     private ColorPicker colorButtonSelector(){
 
-        ColorPicker colorPicker = new ColorPicker();
+        colorPicker = new ColorPicker();
         colorPicker.getStyleClass().add("split-button");
         colorPicker.setId("colorpicker-button");
 
         colorPicker.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(final ActionEvent event){
+                 colorPicker.getValue();
                 System.out.println(colorPicker.getValue());
-                colorPicker.getValue();
             }
         });
-
-        colorPicker.getValue();
-        System.out.println("2 " +colorPicker.getValue());
 
         return colorPicker;
     }
 
-    private CheckBox filledCheckBox(){
+    private CheckBox fillColorCheckbox(){
 
         fillCheckBox = new CheckBox("Fill");
         fillCheckBox.setPadding(new Insets(0, CHECKBOX_PADDING_RIGHT,0,0));
-        fillCheckBox.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(final ActionEvent event){
-                if(!filledCheckBox().isIndeterminate()){
-                    fillCheckBox.isSelected();
-                }
-                else{
-                    fillCheckBox.isIndeterminate();
-                }
-            }
-        });
+
         return fillCheckBox;
     }
 }

@@ -46,7 +46,8 @@ public class CircleAdapter implements IShape{
     private Color color;
 
     public CircleAdapter(Circle circle){
-        this.circle = circle;
+        this.circle =circle;
+
     }
 
     @Override
@@ -69,6 +70,7 @@ public class CircleAdapter implements IShape{
 
     @Override
     public double getX(){
+
         return circle.getX();
     }
 
@@ -95,13 +97,17 @@ public class CircleAdapter implements IShape{
     @Override
     public void drawShape(final GraphicsContext graphics){
 
+        graphics.setStroke(circle.getColor());
 
-        graphics.fillOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
+        if(circle.isFill()){
+            graphics.setFill(circle.getColor());
+            graphics.fillOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
 
-        graphics.setFill(getColor());
+        }
+        else{
 
-        graphics.strokeOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
-
-
+            graphics.setLineWidth(circle.getThickness());
+            graphics.strokeOval(circle.getX(), circle.getY(), this.circle.getRadius(), this.circle.getRadius());
+        }
     }
 }

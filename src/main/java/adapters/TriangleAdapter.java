@@ -73,13 +73,22 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        double xpoints[] = {25, 145, 25, 145, 25};
-        double ypoints[] = {25, 25, 145, 145, 25};
-        int npoints = 5;
+        double xpoints[] = {getX(), getX()+145, getX()+25, getX()+145, getX()+25};
+        double ypoints[] = {getY(), getY()+25, getY()+145, getY()+145, getY()+25};
+        int npoints = 3;
+
+        graphics.setLineWidth(triangle.getThickness());
 
         //draws the triangle
-        graphics.strokePolygon(xpoints,ypoints,npoints);
-        graphics.setFill(getColor());
+        if(triangle.isFill()){
+            graphics.setFill(triangle.getColor());
+            graphics.fillPolygon(xpoints,ypoints,npoints);
+        }
+        else{
+            graphics.setStroke(triangle.getColor());
+            graphics.strokePolygon(xpoints,ypoints,npoints);
+        }
+
 
 
 

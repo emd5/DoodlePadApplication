@@ -71,9 +71,20 @@ public class RectangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        graphics.fillRect(getX(),getY(),this.rectangle.getWidth(),
-                this.rectangle.getHeight());
 
+        graphics.setLineWidth(rectangle.getThickness());
+
+        //draws the triangle
+        if(rectangle.isFill()){
+            graphics.setFill(rectangle.getColor());
+            graphics.fillRect(rectangle.getX(),rectangle.getY(),this.rectangle.getWidth(),
+                    this.rectangle.getHeight());
+        }
+        else{
+            graphics.setStroke(rectangle.getColor());
+            graphics.strokeRect(rectangle.getX(),rectangle.getY(),this.rectangle.getWidth(),this
+                    .rectangle.getHeight());
+        }
 
     }
 }

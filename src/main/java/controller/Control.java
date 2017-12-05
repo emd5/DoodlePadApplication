@@ -1,4 +1,4 @@
-package ui;/*
+package controller;/*
  *Liz Mahoney
  *12/2/17
  *Control.java
@@ -6,6 +6,7 @@ package ui;/*
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import ui.DoodlePadUI;
 
 import java.util.EventListener;
 

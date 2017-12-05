@@ -24,7 +24,6 @@ public class LineAdapter implements IShape{
 
     public LineAdapter(Line line){
         this.line = line;
-
     }
 
     @Override
@@ -74,9 +73,18 @@ public class LineAdapter implements IShape{
     }
     @Override
     public void drawShape(final GraphicsContext graphics){
-        graphics.setStroke(getColor());
-        graphics.setLineWidth(getThickness());
-        graphics.strokeLine(getX(),getY(),this.line.getX2(), this.line.getY2());
+        graphics.setStroke(line.getColor());
+        graphics.setLineWidth(line.getThickness());
+        graphics.strokeLine(line.getX(),line.getY(),this.line.getX2(), this.line.getY2());
+
+        //draws the line
+        graphics.setStroke(line.getColor());
+
+        graphics.setFill(line.getColor());
+        graphics.strokeLine(getX(),getY(),line.getX2(),line.getY2());
+
+
+
 
     }
 }
