@@ -1,8 +1,10 @@
-package adapters;/*
+/*
  *Liz Mahoney
  *12/2/17
  *TriangleAdapter.java
  */
+
+package adapters;
 
 import drawing.IShape;
 import drawing.SavedShapes;
@@ -11,8 +13,9 @@ import javafx.scene.paint.Color;
 import shapes.Shape;
 import shapes.Triangle;
 
-
 /**
+ * The type Triangle adapter.
+ *
  * @author Liz Mahoney
  * @version 1.0
  */
@@ -23,6 +26,11 @@ public class TriangleAdapter implements IShape{
     private Color color;
     private boolean fill;
 
+    /**
+     * Instantiates a new Triangle adapter.
+     *
+     * @param triangle the triangle
+     */
     public TriangleAdapter(Triangle triangle){
         this.triangle = triangle;
 
@@ -73,24 +81,18 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        double xpoints[] = {getX(), getX()+145, getX()+25, getX()+145, getX()+25};
-        double ypoints[] = {getY(), getY()+25, getY()+145, getY()+145, getY()+25};
+        double xpoints[] = {getX(), (getX()/2), getX()-getY()};
+        double ypoints[] = {getY(), (getY()/2), getY()/2+getX()};
         int npoints = 3;
 
-        graphics.setLineWidth(triangle.getThickness());
+        graphics.setLineWidth(getThickness());
+        graphics.setStroke(getColor());
+        graphics.strokePolygon(xpoints,ypoints,npoints);
 
         //draws the triangle
-        if(triangle.isFill()){
-            graphics.setFill(triangle.getColor());
+        if(getFilled()){
+            graphics.setFill(getColor());
             graphics.fillPolygon(xpoints,ypoints,npoints);
         }
-        else{
-            graphics.setStroke(triangle.getColor());
-            graphics.strokePolygon(xpoints,ypoints,npoints);
-        }
-
-
-
-
     }
 }

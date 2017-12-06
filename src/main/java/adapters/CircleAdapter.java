@@ -17,27 +17,13 @@ import shapes.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
+ * The type Circle adapter.
  *
- * Your program will make direct use of the SavedShapes class to store shapes that
- are added to the user interface. Our goal is to use the existing shape classes seen
- above, but to make them compatible with our SavedShapes class.
-
- Instead create an adapter class for each of the four classes: Oval, Rectangle,
- Line and Triangle.
-
- Your adapter class will store an instance of one of the shape classes and
- implement the IShape interface.
-
- This directly follows our use of the Adapter pattern in class.
-
-
- * This adapter class will store an instance of one Circle class
- * and implement the IShape interface
  * @author Liz Mahoney
  * @version 1.0
  */
-
 public class CircleAdapter implements IShape{
 
     private Circle circle;
@@ -45,6 +31,11 @@ public class CircleAdapter implements IShape{
     private boolean fill;
     private Color color;
 
+    /**
+     * Instantiates a new Circle adapter.
+     *
+     * @param circle the circle
+     */
     public CircleAdapter(Circle circle){
         this.circle =circle;
 
@@ -97,17 +88,16 @@ public class CircleAdapter implements IShape{
     @Override
     public void drawShape(final GraphicsContext graphics){
 
-        graphics.setStroke(circle.getColor());
+        graphics.setStroke(getColor());
+        graphics.setLineWidth(getThickness());
+        graphics.strokeOval(getX(), getY(), this.circle.getRadius(),
+                this.circle.getRadius());
 
-        if(circle.isFill()){
-            graphics.setFill(circle.getColor());
+        if(getFilled()){
+            graphics.setFill(getColor());
             graphics.fillOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
 
         }
-        else{
 
-            graphics.setLineWidth(circle.getThickness());
-            graphics.strokeOval(circle.getX(), circle.getY(), this.circle.getRadius(), this.circle.getRadius());
-        }
     }
 }

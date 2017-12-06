@@ -1,17 +1,18 @@
-package adapters;/*
+/*
  *Liz Mahoney
  *12/2/17
  *RectangleAdapter.java
  */
+package adapters;
 
 import drawing.IShape;
-import drawing.SavedShapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import shapes.Rectangle;
-import shapes.Shape;
 
 /**
+ * The type Rectangle adapter.
+ *
  * @author Liz Mahoney
  * @version 1.0
  */
@@ -22,6 +23,11 @@ public class RectangleAdapter implements IShape{
     private Color color;
     private boolean fill;
 
+    /**
+     * Instantiates a new Rectangle adapter.
+     *
+     * @param rectangle the rectangle
+     */
     public RectangleAdapter(Rectangle rectangle){
         this.rectangle = rectangle;
     }
@@ -73,17 +79,15 @@ public class RectangleAdapter implements IShape{
     public void drawShape(final GraphicsContext graphics){
 
         graphics.setLineWidth(rectangle.getThickness());
+        graphics.setStroke(getColor());
+        graphics.strokeRect(getX(),getY(),this.rectangle.getWidth(),this
+                .rectangle.getHeight());
 
         //draws the triangle
-        if(rectangle.isFill()){
+        if(getFilled()){
             graphics.setFill(rectangle.getColor());
             graphics.fillRect(rectangle.getX(),rectangle.getY(),this.rectangle.getWidth(),
                     this.rectangle.getHeight());
-        }
-        else{
-            graphics.setStroke(rectangle.getColor());
-            graphics.strokeRect(rectangle.getX(),rectangle.getY(),this.rectangle.getWidth(),this
-                    .rectangle.getHeight());
         }
 
     }

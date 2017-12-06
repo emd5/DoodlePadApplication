@@ -11,7 +11,10 @@ import javafx.scene.paint.Color;
 import shapes.Line;
 import shapes.Shape;
 
+
 /**
+ * The type Line adapter.
+ *
  * @author Liz Mahoney
  * @version 1.0
  */
@@ -22,6 +25,11 @@ public class LineAdapter implements IShape{
     private Color color;
     private boolean fill;
 
+    /**
+     * Instantiates a new Line adapter.
+     *
+     * @param line the line
+     */
     public LineAdapter(Line line){
         this.line = line;
     }
@@ -73,18 +81,11 @@ public class LineAdapter implements IShape{
     }
     @Override
     public void drawShape(final GraphicsContext graphics){
-        graphics.setStroke(line.getColor());
-        graphics.setLineWidth(line.getThickness());
-        graphics.strokeLine(line.getX(),line.getY(),this.line.getX2(), this.line.getY2());
 
         //draws the line
-        graphics.setStroke(line.getColor());
-
-        graphics.setFill(line.getColor());
+        graphics.setLineWidth(getThickness());
+        graphics.setStroke(getColor());
+        graphics.setFill(getColor());
         graphics.strokeLine(getX(),getY(),line.getX2(),line.getY2());
-
-
-
-
     }
 }
