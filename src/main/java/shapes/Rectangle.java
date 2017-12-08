@@ -2,13 +2,12 @@ package shapes;
 
 import javafx.scene.paint.Color;
 
-public class Rectangle extends Shape
-{
+public class Rectangle extends Shape{
     private double width;
     private double height;
 
     public Rectangle(double x, double y, double width,
-        double height, double thickness, Color color, boolean fill){
+                     double height, double thickness, Color color, boolean fill){
         super(x, y, thickness, color, fill);
 
         this.width = width;

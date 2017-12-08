@@ -2,8 +2,7 @@ package shapes;
 
 import javafx.scene.paint.Color;
 
-public class Circle extends Shape
-{
+public class Circle extends Shape{
     private double radius;
 
     public Circle(double radius, double x, double y, double thickness, Color color, boolean fill){

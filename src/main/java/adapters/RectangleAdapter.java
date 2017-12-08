@@ -80,13 +80,13 @@ public class RectangleAdapter implements IShape{
 
         graphics.setLineWidth(rectangle.getThickness());
         graphics.setStroke(getColor());
-        graphics.strokeRect(getX(),getY(),this.rectangle.getWidth(),this
+        graphics.strokeRect(getX(), getY(), this.rectangle.getWidth(), this
                 .rectangle.getHeight());
 
         //draws the triangle
         if(getFilled()){
             graphics.setFill(rectangle.getColor());
-            graphics.fillRect(rectangle.getX(),rectangle.getY(),this.rectangle.getWidth(),
+            graphics.fillRect(rectangle.getX(), rectangle.getY(), this.rectangle.getWidth(),
                     this.rectangle.getHeight());
         }
 

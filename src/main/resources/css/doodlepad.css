@@ -1,12 +1,12 @@
-#window{
+#window {
     -fx-padding: 10px;
 }
 
-#canvasVbox{
+#canvasVbox {
 
 }
 
-#flowPane{
+#flowPane {
     -fx-padding: 5px;
 
     /*delete below*/
@@ -15,17 +15,17 @@
     -fx-pref-height: 70px;
 }
 
-#button{
+#button {
     -fx-pref-height: 20px;
 }
 
-#colorpicker-button{
+#colorpicker-button {
     -fx-pref-height: 40px;
     -fx-pref-width: 100px;
     -fx-color-label-visible: false;
 }
 
-#slider{
+#slider {
     -fx-tick-labels-visible: 0;
     -fx-show-tick-labels: true;
     -fx-unit-increment: 1;

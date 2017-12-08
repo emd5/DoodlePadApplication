@@ -1,40 +1,44 @@
 package adapters;/*
  *Liz Mahoney
- *12/1/17
- *CircleAdapter.java
+ *12/7/17
+ *PolygonAdapter.java
  */
 
 import drawing.IShape;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import shapes.Circle;
-
+import shapes.Polygon;
 
 /**
- * The type Circle adapter.
+ * The type Polygon adapter.
  *
  * @author Liz Mahoney
  * @version 1.0
  */
-public class CircleAdapter implements IShape{
+public class PolygonAdapter implements IShape{
 
-    private Circle circle;
+    public static final int POINT_100 = 100;
+    public static final int POINT_125 = 125;
+    public static final int POINT_50 = 50;
+    public static final int POINT_25 = 25;
+    public static final int POINT_75 = 75;
+    private Polygon polygon;
     private double thickness;
-    private boolean fill;
     private Color color;
+    private boolean fill;
 
     /**
-     * Instantiates a new Circle adapter.
+     * Instantiates a new Polygon adapter.
      *
-     * @param circle the circle
+     * @param polygon the polygon
      */
-    public CircleAdapter(Circle circle){
-        this.circle = circle;
-
+    public PolygonAdapter(Polygon polygon){
+        this.polygon = polygon;
     }
 
     @Override
     public IShape setThickness(final double value){
+
         this.thickness = value;
         return this;
     }
@@ -53,43 +57,46 @@ public class CircleAdapter implements IShape{
 
     @Override
     public double getX(){
-
-        return circle.getX();
+        return polygon.getX();
     }
 
     @Override
     public double getY(){
-        return circle.getY();
+        return polygon.getY();
     }
 
     @Override
     public double getThickness(){
-        return circle.getThickness();
+        return polygon.getThickness();
     }
 
     @Override
     public Color getColor(){
-        return circle.getColor();
+        return polygon.getColor();
     }
 
     @Override
     public boolean getFilled(){
-        return circle.isFill();
+        return polygon.isFill();
     }
 
     @Override
     public void drawShape(final GraphicsContext graphics){
 
+        double[] x = {getX(), getX() + POINT_100, getX() + POINT_125, getX() + POINT_100, getX(), getX() - POINT_50};
+        double[] y = {getY(), getY(), getY() + POINT_50, getY() + POINT_75, getY() + POINT_75,
+                getY() +
+                        POINT_25};
+
         graphics.setStroke(getColor());
+        graphics.strokePolygon(x, y, this.polygon.getNpoints());
         graphics.setLineWidth(getThickness());
-        graphics.strokeOval(getX(), getY(), this.circle.getRadius(),
-                this.circle.getRadius());
 
         if(getFilled()){
             graphics.setFill(getColor());
-            graphics.fillOval(getX(), getY(), this.circle.getRadius(), this.circle.getRadius());
-
+            graphics.fillPolygon(x, y, this.polygon.getNpoints());
         }
+
 
     }
 }

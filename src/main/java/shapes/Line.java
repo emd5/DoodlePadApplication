@@ -2,8 +2,7 @@ package shapes;
 
 import javafx.scene.paint.Color;
 
-public class Line extends Shape
-{
+public class Line extends Shape{
     private double x2;
     private double y2;
 
@@ -15,18 +14,15 @@ public class Line extends Shape
         this.y2 = y2;
     }
 
-    public double getX2()
-    {
+    public double getX2(){
         return x2;
     }
 
-    public double getY2()
-    {
+    public double getY2(){
         return y2;
     }
 
-    public String toString()
-    {
+    public String toString(){
         return "Line [x2=" + x2 + ", y2=" + y2 + " " + super.toString() + "]";
     }
 }

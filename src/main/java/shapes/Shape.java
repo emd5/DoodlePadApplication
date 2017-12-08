@@ -2,8 +2,7 @@ package shapes;
 
 import javafx.scene.paint.Color;
 
-public class Shape
-{
+public class Shape{
     //location
     private double x;
     private double y;

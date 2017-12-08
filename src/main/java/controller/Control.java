@@ -8,8 +8,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import ui.DoodlePadUI;
 
-import java.util.EventListener;
-
 
 /**
  * @author Liz Mahoney

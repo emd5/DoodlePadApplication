@@ -7,10 +7,8 @@
 package adapters;
 
 import drawing.IShape;
-import drawing.SavedShapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import shapes.Shape;
 import shapes.Triangle;
 
 /**
@@ -38,7 +36,7 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public IShape setThickness(final double value){
-        this.thickness= value;
+        this.thickness = value;
         return this;
     }
 
@@ -81,18 +79,18 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        double xpoints[] = {getX(), (getX()/2), getX()-getY()};
-        double ypoints[] = {getY(), (getY()/2), getY()/2+getX()};
+        double xpoints[] = {getX(), (getX() / 2), getX() - getY()};
+        double ypoints[] = {getY(), (getY() / 2), getY() / 2 + getX()};
         int npoints = 3;
 
         graphics.setLineWidth(getThickness());
         graphics.setStroke(getColor());
-        graphics.strokePolygon(xpoints,ypoints,npoints);
+        graphics.strokePolygon(xpoints, ypoints, npoints);
 
         //draws the triangle
         if(getFilled()){
             graphics.setFill(getColor());
-            graphics.fillPolygon(xpoints,ypoints,npoints);
+            graphics.fillPolygon(xpoints, ypoints, npoints);
         }
     }
 }

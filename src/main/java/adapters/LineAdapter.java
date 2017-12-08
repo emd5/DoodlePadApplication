@@ -5,11 +5,9 @@ package adapters;/*
  */
 
 import drawing.IShape;
-import drawing.SavedShapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import shapes.Line;
-import shapes.Shape;
 
 
 /**
@@ -79,6 +77,7 @@ public class LineAdapter implements IShape{
     public boolean getFilled(){
         return line.isFill();
     }
+
     @Override
     public void drawShape(final GraphicsContext graphics){
 
@@ -86,6 +85,6 @@ public class LineAdapter implements IShape{
         graphics.setLineWidth(getThickness());
         graphics.setStroke(getColor());
         graphics.setFill(getColor());
-        graphics.strokeLine(getX(),getY(),line.getX2(),line.getY2());
+        graphics.strokeLine(getX(), getY(), line.getX2(), line.getY2());
     }
 }
