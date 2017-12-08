@@ -16,8 +16,8 @@ public class Polygon extends Shape{
 
     private int nPoints;
 
-
-    public Polygon(final double x, final double y, int nPoints, final double thickness, final Color color, final boolean fill){
+    public Polygon(final double x, final double y, int nPoints, final double thickness,
+                   final Color color, final boolean fill){
         super(x, y, thickness, color, fill);
 
         this.nPoints = nPoints;

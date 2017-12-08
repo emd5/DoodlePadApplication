@@ -79,8 +79,8 @@ public class TriangleAdapter implements IShape{
 
     @Override
     public void drawShape(final GraphicsContext graphics){
-        double xpoints[] = {getX(), (getX() / 2), getX() - getY()};
-        double ypoints[] = {getY(), (getY() / 2), getY() / 2 + getX()};
+        double xpoints[] = {getX(), (getX() + 100), getX() + 200};
+        double ypoints[] = {getY(), (getY() + 100), getY() - 100};
         int npoints = 3;
 
         graphics.setLineWidth(getThickness());
